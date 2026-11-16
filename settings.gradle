@@ -1,1 +1,26 @@
+pluginManagement {
+	includeBuild 'build-logic'
+	repositories {
+		gradlePluginPortal()
+		mavenCentral()
+	}
+}
+
+dependencyResolutionManagement {
+	repositories {
+		mavenCentral()
+	}
+}
+
 rootProject.name = 'vacation-management'
+
+include 'libs:common-web'
+include 'libs:common-security'
+include 'libs:common-events'
+include 'libs:common-messaging'
+include 'libs:common-test'
+include 'services:api-gateway'
+include 'services:organization-service'
+include 'services:leave-service'
+include 'services:approval-service'
+include 'services:notification-service'

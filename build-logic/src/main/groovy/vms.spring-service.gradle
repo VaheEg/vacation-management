@@ -1,0 +1,23 @@
+
+// Convention for every deployable service: the Java convention plus Spring Boot, Actuator and Jib.
+
+plugins {
+	id 'vms.java-library'
+	id 'org.springframework.boot'
+	id 'com.google.cloud.tools.jib'
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+jib {
+	from {
+		image = 'eclipse-temurin:21-jre'
+	}
+	to {
+		image = "vms/${project.name}:${project.version}"
+	}
+}

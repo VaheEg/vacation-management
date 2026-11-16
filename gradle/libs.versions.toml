@@ -1,0 +1,20 @@
+# Versions verified on day 1 — see docs/adr/0001-technology-versions.md.
+# Anything managed by the Spring Boot BOM (Hibernate, Kafka clients, Flyway, JUnit,
+# Testcontainers, Lombok, ...) is deliberately not pinned here.
+
+[versions]
+spring-boot = "4.1.2"
+spring-cloud = "2025.1.4"
+spotless = "8.11.0"
+google-java-format = "2.0.0"
+greclipse = "4.35"
+jib = "3.5.4"
+jacoco = "0.8.16"
+
+[libraries]
+spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
+
+# Gradle plugins used by the convention plugins in build-logic
+spring-boot-gradle-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "spring-boot" }
+spotless-gradle-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
+jib-gradle-plugin = { module = "com.google.cloud.tools:jib-gradle-plugin", version.ref = "jib" }
