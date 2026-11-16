@@ -1,0 +1,83 @@
+// Convention for every Java module: Java 21, JUnit, Spotless, JaCoCo and an integrationTest source set.
+
+plugins {
+	id 'java-library'
+	id 'jacoco'
+	id 'com.diffplug.spotless'
+}
+
+def libs = extensions.getByType(VersionCatalogsExtension).named('libs')
+
+group = 'am.vacation'
+version = '0.1.0-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+	options.compilerArgs.add('-parameters')
+}
+
+// Integration tests (Testcontainers, Spring context with real infrastructure) live in
+// src/integrationTest and run with `./gradlew integrationTest`, not as part of `build`.
+sourceSets {
+	integrationTest {
+		compileClasspath += sourceSets.main.output
+		runtimeClasspath += sourceSets.main.output
+	}
+}
+
+configurations {
+	integrationTestImplementation.extendsFrom testImplementation
+	integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+dependencies {
+	// Versions of Spring and its managed third-party libraries come from the Spring Boot BOM.
+	api platform(libs.findLibrary('spring-boot-dependencies').get())
+
+	testImplementation 'org.junit.jupiter:junit-jupiter'
+	testImplementation 'org.assertj:assertj-core'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.register('integrationTest', Test) {
+	description = 'Runs the integration tests.'
+	group = 'verification'
+	testClassesDirs = sourceSets.integrationTest.output.classesDirs
+	classpath = sourceSets.integrationTest.runtimeClasspath
+	shouldRunAfter tasks.named('test')
+}
+
+tasks.withType(Test).configureEach {
+	useJUnitPlatform()
+}
+
+jacoco {
+	toolVersion = libs.findVersion('jacoco').get().requiredVersion
+}
+
+tasks.named('test') {
+	finalizedBy tasks.named('jacocoTestReport')
+}
+
+tasks.named('jacocoTestReport') {
+	dependsOn tasks.named('test')
+	reports {
+		xml.required = true
+	}
+}
+
+spotless {
+	java {
+		googleJavaFormat(libs.findVersion('google-java-format').get().requiredVersion)
+		removeUnusedImports()
+	}
+	groovyGradle {
+		greclipse(libs.findVersion('greclipse').get().requiredVersion)
+	}
+}
