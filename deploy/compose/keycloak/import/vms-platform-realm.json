@@ -1,0 +1,12 @@
+{
+  "realm": "vms-platform",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "PLATFORM_OWNER",
+        "description": "Lists, suspends and reactivates companies"
+      }
+    ]
+  }
+}

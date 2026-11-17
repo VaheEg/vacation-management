@@ -1,3 +1,9 @@
 plugins {
 	id 'vms.java-library'
 }
+
+dependencies {
+	api 'org.testcontainers:testcontainers-postgresql'
+	api 'org.testcontainers:testcontainers-kafka'
+	api 'org.springframework:spring-test'
+}
